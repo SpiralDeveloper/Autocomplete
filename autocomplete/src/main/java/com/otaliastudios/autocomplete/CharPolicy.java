@@ -1,11 +1,11 @@
 package com.otaliastudios.autocomplete;
 
-import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.util.Log;
+
+import java.util.List;
 
 
 /**
@@ -18,16 +18,16 @@ import android.util.Log;
  * - text "You should see this @j" : presenter will be passed the query "j"
  * - text "You should see this @john @m" : presenter will be passed the query "m"
  */
-public class CharPolicy implements AutocompletePolicy {
+public class CharPolicy2 implements AutocompletePolicy {
 
-    private final static String TAG = CharPolicy.class.getSimpleName();
+    private final static String TAG = CharPolicy2.class.getSimpleName();
     private final static boolean DEBUG = false;
 
     private static void log(String log) {
         if (DEBUG) Log.e(TAG, log);
     }
 
-    private final char CH;
+    private final List<Character> CH;
     private final int[] INT = new int[2];
     private boolean needSpaceBefore = true;
 
@@ -36,7 +36,7 @@ public class CharPolicy implements AutocompletePolicy {
      *
      * @param trigger the triggering character.
      */
-    public CharPolicy(char trigger) {
+    public CharPolicy2(List<Character> trigger) {
         CH = trigger;
     }
 
@@ -47,7 +47,7 @@ public class CharPolicy implements AutocompletePolicy {
      * @param trigger the triggering character.
      * @param needSpaceBefore whether we need a space before trigger
      */
-    public CharPolicy(char trigger, boolean needSpaceBefore) {
+    public CharPolicy2(List<Character> trigger, boolean needSpaceBefore) {
         CH = trigger;
         this.needSpaceBefore = needSpaceBefore;
     }
@@ -63,11 +63,18 @@ public class CharPolicy implements AutocompletePolicy {
         return !Character.isWhitespace(ch);
     }
 
+    private boolean multiMatch(char last) {
+        for(char ch:CH)
+            if(!(last!=ch))
+                return last!=ch;
+        return true;
+    }
+
     private int[] checkText(Spannable text, int cursorPos) {
         final int spanEnd = cursorPos;
         char last = 'x';
         cursorPos -= 1; // If the cursor is at the end, we will have cursorPos = length. Go back by 1.
-        while (cursorPos >= 0 && last != CH) {
+        while (cursorPos >= 0 && multiMatch(last)) {
             char ch = text.charAt(cursorPos);
             log("checkText: char is "+ch);
             if (isValidChar(ch)) {
@@ -84,7 +91,7 @@ public class CharPolicy implements AutocompletePolicy {
         cursorPos += 1; // + 1 because we end BEHIND the valid selection
 
         // Start checking.
-        if (cursorPos == 0 && last != CH) {
+        if (cursorPos == 0 && multiMatch(last)) {
             // We got to the start of the string, and no CH was encountered. Nothing to do.
             log("checkText: got to start but no CH, returning NULL");
             return null;
