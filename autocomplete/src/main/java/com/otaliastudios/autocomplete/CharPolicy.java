@@ -107,7 +107,7 @@ public class CharPolicy implements AutocompletePolicy {
         }
 
         // All seems OK.
-        final int spanStart = cursorPos // + 1; // + 1 because we want to exclude CH from the query
+        final int spanStart = cursorPos; // + 1; // + 1 because we want to exclude CH from the query
         INT[0] = spanStart;
         INT[1] = spanEnd;
         log("checkText: found! cursorPos="+cursorPos);
