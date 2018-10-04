@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -57,6 +58,7 @@ public final class Autocomplete<T> implements TextWatcher, SpanWatcher {
         private AutocompleteCallback<T> callback;
         private Drawable backgroundDrawable;
         private float elevationDp = 6;
+        private View anchor;
 
         private Builder(EditText source) {
             this.source = source;
@@ -73,6 +75,13 @@ public final class Autocomplete<T> implements TextWatcher, SpanWatcher {
             this.presenter = presenter;
             return this;
         }
+
+        public Builder<T> withAnchor(View anchor) {
+            this.anchor = anchor;
+            return this;
+        }
+
+
 
         /**
          * Registers the {@link AutocompleteCallback} to be used, responsible for listening to
@@ -171,10 +180,9 @@ public final class Autocomplete<T> implements TextWatcher, SpanWatcher {
         presenter = builder.presenter;
         callback = builder.callback;
         source = builder.source;
-
         // Set up popup
         popup = new AutocompletePopup(source.getContext());
-        popup.setAnchorView(source);
+        popup.setAnchorView(builder.anchor!=null?builder.anchor:source);
         popup.setGravity(Gravity.START);
         popup.setModal(false);
         popup.setBackgroundDrawable(builder.backgroundDrawable);
