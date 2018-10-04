@@ -18,9 +18,9 @@ import java.util.List;
  * - text "You should see this @j" : presenter will be passed the query "j"
  * - text "You should see this @john @m" : presenter will be passed the query "m"
  */
-public class CharPolicy2 implements AutocompletePolicy {
+public class CharPolicy implements AutocompletePolicy {
 
-    private final static String TAG = CharPolicy2.class.getSimpleName();
+    private final static String TAG = CharPolicy.class.getSimpleName();
     private final static boolean DEBUG = false;
 
     private static void log(String log) {
@@ -36,7 +36,7 @@ public class CharPolicy2 implements AutocompletePolicy {
      *
      * @param trigger the triggering character.
      */
-    public CharPolicy2(List<Character> trigger) {
+    public CharPolicy(List<Character> trigger) {
         CH = trigger;
     }
 
@@ -47,7 +47,7 @@ public class CharPolicy2 implements AutocompletePolicy {
      * @param trigger the triggering character.
      * @param needSpaceBefore whether we need a space before trigger
      */
-    public CharPolicy2(List<Character> trigger, boolean needSpaceBefore) {
+    public CharPolicy(List<Character> trigger, boolean needSpaceBefore) {
         CH = trigger;
         this.needSpaceBefore = needSpaceBefore;
     }
